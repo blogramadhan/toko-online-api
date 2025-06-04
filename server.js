@@ -45,10 +45,10 @@ app.get('/', (req, res) => {
         message: 'Cart Backend API',
         version: '1.0.0',
         endpoints: {
-        auth: '/api/auth',
-        products: '/api/products',
-        cart: '/api/cart',
-        orders: '/api/orders'
+            auth: '/api/auth',
+            products: '/api/products',
+            cart: '/api/cart',
+            orders: '/api/orders'
         }
     });
 });
