@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const { authenticateToken } = require('../middleware/auth');
-const { registerValidator, loginValidator, updateUserValidator } = require('../middleware/authValidator');
+const { registerValidator, loginValidator, updateProfileValidator } = require('../validators/authValidator');
 
 // POST /api/auth/register - Register User Baru
 router.post('/register', registerValidator, authController.register);
