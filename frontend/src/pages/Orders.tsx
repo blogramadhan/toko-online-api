@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { orderService } from '../services/order.service';
-import { Order } from '../types';
+import type { Order } from '../types';
 
 const Orders: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Orders: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('');
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -43,16 +43,16 @@ const Orders: React.FC = () => {
       } else {
         setError('Failed to load orders');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load orders');
+    } catch (err: unknown) {
+      setError((err as any).response?.data?.message || 'Failed to load orders');
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
 
   useEffect(() => {
     fetchOrders();
-  }, [statusFilter]);
+  }, [fetchOrders]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {

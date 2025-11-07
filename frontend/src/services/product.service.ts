@@ -1,5 +1,6 @@
 import api from './api';
-import { Product, ApiResponse } from '../types';
+import type { Product } from '../types';
+import type { ApiResponse } from '../types';
 
 export const productService = {
   getAll: async (params?: {
@@ -11,7 +12,7 @@ export const productService = {
     maxPrice?: number;
     sortBy?: string;
     sortOrder?: string;
-  }): Promise<ApiResponse<{ products: Product[]; pagination: any }>> => {
+  }): Promise<ApiResponse<{ products: Product[]; pagination: unknown }>> => {
     const response = await api.get('/products', { params });
     return response.data;
   },

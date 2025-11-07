@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -29,8 +29,8 @@ import {
 import { SearchIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { productService } from '../services/product.service';
-import { useCart } from '../contexts/CartContext';
-import { Product } from '../types';
+import { useCart } from '../hooks/useCart';
+import type { Product } from '../types';
 
 const Products: React.FC = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const Products: React.FC = () => {
   // Categories for filter
   const categories = ['Electronics', 'Clothing', 'Food', 'Books', 'Sports', 'Home'];
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -74,20 +74,20 @@ const Products: React.FC = () => {
 
       if (response.success && response.data) {
         setProducts(response.data.products);
-        setTotalPages(response.data.pagination?.totalPages || 1);
+        setTotalPages((response.data.pagination as any)?.totalPages || 1);
       } else {
         setError('Failed to load products');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load products');
+    } catch (err: unknown) {
+      setError((err as any).response?.data?.message || 'Failed to load products');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, search, category, priceRange, sortBy, sortOrder, limit]);
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, search, category, priceRange, sortBy, sortOrder]);
+  }, [fetchProducts]);
 
   const handleAddToCart = async (productId: number, productName: string) => {
     try {
@@ -100,10 +100,10 @@ const Products: React.FC = () => {
         isClosable: true,
         position: 'top-right',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to add to cart',
+        description: (error as any).response?.data?.message || 'Failed to add to cart',
         status: 'error',
         duration: 3000,
         isClosable: true,

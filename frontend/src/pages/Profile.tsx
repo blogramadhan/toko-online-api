@@ -20,12 +20,12 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { authService } from '../services/auth.service';
-import { useAuth } from '../contexts/AuthContext';
-import { User } from '../types';
+import { useAuth } from '../hooks/useAuth';
+import type { User } from '../types';
 
 const Profile: React.FC = () => {
   const toast = useToast();
-  const { user: currentUser } = useAuth();
+  const {} = useAuth();
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,8 +57,8 @@ const Profile: React.FC = () => {
       } else {
         setError('Failed to load profile');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load profile');
+    } catch (err: unknown) {
+      setError((err as any).response?.data?.message || 'Failed to load profile');
     } finally {
       setLoading(false);
     }
@@ -118,10 +118,10 @@ const Profile: React.FC = () => {
           position: 'top-right',
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: 'Error',
-        description: err.response?.data?.message || 'Failed to update profile',
+        description: (err as any).response?.data?.message || 'Failed to update profile',
         status: 'error',
         duration: 3000,
         isClosable: true,

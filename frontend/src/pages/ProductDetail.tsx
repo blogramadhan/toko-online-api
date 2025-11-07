@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -27,8 +27,8 @@ import {
 import { ArrowBackIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { productService } from '../services/product.service';
-import { useCart } from '../contexts/CartContext';
-import { Product } from '../types';
+import { useCart } from '../hooks/useCart';
+import type { Product } from '../types';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,34 +42,34 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!id) {
-        setError('Product ID is required');
-        setLoading(false);
-        return;
+  const fetchProduct = useCallback(async () => {
+    if (!id) {
+      setError('Product ID is required');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await productService.getById(Number(id));
+
+      if (response.success && response.data) {
+        setProduct(response.data.product);
+      } else {
+        setError('Product not found');
       }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await productService.getById(Number(id));
-
-        if (response.success && response.data) {
-          setProduct(response.data.product);
-        } else {
-          setError('Product not found');
-        }
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load product');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
+    } catch (err: unknown) {
+      setError((err as any).response?.data?.message || 'Failed to load product');
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
 
   const handleAddToCart = async () => {
     if (!product) return;
@@ -86,10 +86,10 @@ const ProductDetail: React.FC = () => {
         position: 'top-right',
       });
       setQuantity(1);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to add to cart',
+        description: (error as any & { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to add to cart',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -341,7 +341,7 @@ const ProductDetail: React.FC = () => {
                     <Text fontSize="sm" color="gray.600">
                       Status:
                     </Text>
-                    <Badge colorScheme={product.isActive ? 'green' : 'gray'}>
+                    <Badge colorScheme={product.isActive ? 'green' : 'gray'} fontSize="sm" px={3} py={1}>
                       {product.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </HStack>

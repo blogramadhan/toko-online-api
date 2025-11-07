@@ -20,7 +20,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
+import { useCart } from '../hooks/useCart';
 import { orderService } from '../services/order.service';
 
 const Checkout: React.FC = () => {

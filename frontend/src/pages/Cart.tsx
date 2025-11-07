@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { DeleteIcon, AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
+import { useCart } from '../hooks/useCart';
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
@@ -226,7 +226,7 @@ const Cart: React.FC = () => {
                         icon={<MinusIcon />}
                         size="sm"
                         onClick={() => handleUpdateQuantity(item.id, item.quantity, -1)}
-                        isDisabled={item.quantity <= 1 || loading}
+                        isDisabled={item.quantity <= 1 || Boolean(loading)}
                         colorScheme="gray"
                       />
                       <Text fontWeight="medium" minW="30px" textAlign="center">
@@ -293,7 +293,7 @@ const Cart: React.FC = () => {
                       icon={<MinusIcon />}
                       size="sm"
                       onClick={() => handleUpdateQuantity(item.id, item.quantity, -1)}
-                      isDisabled={item.quantity <= 1 || loading}
+                      isDisabled={item.quantity <= 1 || Boolean(loading)}
                       colorScheme="gray"
                     />
                     <Text fontWeight="medium" minW="30px" textAlign="center">

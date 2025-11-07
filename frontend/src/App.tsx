@@ -1,7 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContextProvider';
+import { useAuth } from './hooks/useAuth';
+import { CartProvider } from './contexts/CartContextProvider';
 import Navbar from './components/Navbar';
 import {
   Login,
@@ -16,7 +17,7 @@ import {
 } from './pages';
 
 // Protected Route component
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { user, loading } = useAuth();
 
   if (loading) {

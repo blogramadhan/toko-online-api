@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -32,7 +32,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { orderService } from '../services/order.service';
-import { Order } from '../types';
+import type { Order } from '../types';
 
 const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const OrderDetail: React.FC = () => {
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     if (!id) return;
 
     try {
@@ -60,16 +60,16 @@ const OrderDetail: React.FC = () => {
       } else {
         setError('Failed to load order details');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load order details');
+    } catch (err: unknown) {
+      setError((err as any).response?.data?.message || 'Failed to load order details');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchOrder();
-  }, [id]);
+  }, [fetchOrder]);
 
   const handleCancelOrder = async () => {
     if (!order) return;
@@ -91,10 +91,10 @@ const OrderDetail: React.FC = () => {
         });
         onClose();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: 'Error',
-        description: err.response?.data?.message || 'Failed to cancel order',
+        description: (err as any).response?.data?.message || 'Failed to cancel order',
         status: 'error',
         duration: 3000,
         isClosable: true,

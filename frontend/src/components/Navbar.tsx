@@ -14,10 +14,10 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { MoonIcon, SunIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { FiShoppingCart, FiUser } from 'react-icons/fi';
-import { useAuth } from '../contexts/AuthContext';
-import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../hooks/useAuth';
+import { useCart } from '../hooks/useCart';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();

@@ -1,5 +1,6 @@
 import api from './api';
-import { Order, ApiResponse } from '../types';
+import type { Order } from '../types';
+import type { ApiResponse } from '../types';
 
 export const orderService = {
   create: async (data: {
@@ -14,7 +15,7 @@ export const orderService = {
     page?: number;
     limit?: number;
     status?: string;
-  }): Promise<ApiResponse<{ orders: Order[]; pagination: any }>> => {
+  }): Promise<ApiResponse<{ orders: Order[]; pagination: unknown }>> => {
     const response = await api.get('/orders', { params });
     return response.data;
   },
