@@ -1,168 +1,176 @@
-# Toko Online API
+# Toko Online - E-Commerce Application
 
-Backend untuk aplikasi toko online yang dibangun dengan Express.js, JWT, MySQL, dan Sequelize
+Full-stack e-commerce application with TypeScript backend and React frontend.
 
-## Fitur
+## Project Structure
 
-### Admin
-- ✅ Manajemen produk (CRUD)
-- ✅ Melihat semua pesanan
-- ✅ Update status pesanan
-- ✅ Dashboard admin
+This is a monorepo containing both backend and frontend applications:
 
-### User
-- ✅ Registrasi dan login
-- ✅ Melihat produk
-- ✅ Shopping cart
-- ✅ Checkout dan pemesanan
-- ✅ Riwayat pesanan
-- ✅ Update profil
+```
+toko-online-api/
+├── backend/        # Express.js + TypeScript API
+├── frontend/       # React + TypeScript + Chakra UI
+└── README.md       # This file
+```
+
+## Features
+
+### Backend
+- ✅ RESTful API with Express.js and TypeScript
+- ✅ JWT authentication
+- ✅ MySQL database with Sequelize ORM
+- ✅ Role-based access control (Admin/User)
+- ✅ Product management (CRUD)
+- ✅ Shopping cart functionality
+- ✅ Order management
+- ✅ Input validation with express-validator
+
+### Frontend
+- ✅ Modern React with TypeScript
+- ✅ Chakra UI component library
+- ✅ React Router for navigation
+- ✅ Context API for state management
+- ✅ Responsive design
+- ✅ Dark mode support
+- ✅ Protected routes
+- ✅ Shopping cart with real-time updates
+
+## Quick Start
+
+### Prerequisites
+- Node.js (v16 or higher)
+- MySQL (v5.7 or higher)
+- npm or yarn
+
+### Backend Setup
+
+1. Navigate to backend directory:
+```bash
+cd backend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment:
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
+```
+
+4. Create database and run migrations:
+```bash
+mysql -u root -p
+CREATE DATABASE toko_online;
+exit
+
+npm run migrate
+```
+
+5. Start the backend server:
+```bash
+npm run dev
+```
+
+Backend will run at `http://localhost:3000`
+
+### Frontend Setup
+
+1. Open a new terminal and navigate to frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment:
+```bash
+# .env is already configured with default values
+# API URL: http://localhost:3000/api
+```
+
+4. Start the frontend development server:
+```bash
+npm run dev
+```
+
+Frontend will run at `http://localhost:5173`
+
+## Documentation
+
+- [Backend Documentation](./backend/README.md)
+- [Frontend Documentation](./frontend/README.md)
 
 ## API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register user baru
+- `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile (protected)
-- `PUT /api/auth/profile` - Update user profile (protected)
+- `GET /api/auth/profile` - Get user profile
+- `PUT /api/auth/profile` - Update user profile
 
 ### Products
-- `GET /api/products` - Get all active products (public)
-- `GET /api/products/:id` - Get single product (public)
-- `GET /api/products/admin/all` - Get all products (admin only)
-- `POST /api/products` - Create product (admin only)
-- `PUT /api/products/:id` - Update product (admin only)
-- `DELETE /api/products/:id` - Delete product (admin only)
+- `GET /api/products` - Get all products
+- `GET /api/products/:id` - Get product by ID
+- `POST /api/products` - Create product (admin)
+- `PUT /api/products/:id` - Update product (admin)
+- `DELETE /api/products/:id` - Delete product (admin)
 
-### Shopping Cart
-- `GET /api/cart` - Get user's cart (protected)
-- `POST /api/cart/add` - Add item to cart (protected)
-- `PUT /api/cart/items/:itemId` - Update cart item (protected)
-- `DELETE /api/cart/items/:itemId` - Remove item from cart (protected)
-- `DELETE /api/cart/clear` - Clear cart (protected)
-
-### Orders
-- `POST /api/orders` - Create order/checkout (protected)
-- `GET /api/orders` - Get user's orders (protected)
-- `GET /api/orders/:id` - Get single order (protected)
-- `PUT /api/orders/:id/cancel` - Cancel order (protected)
-- `GET /api/orders/admin/all` - Get all orders (admin only)
-- `PUT /api/orders/:id/status` - Update order status (admin only)
-
-## Database Schema
-
-### Users
-- id, name, email, password, role, phone, address, timestamps
-
-### Products
-- id, name, description, price, stock, category, image, isActive, timestamps
-
-### Carts
-- id, userId, status, totalAmount, timestamps
-
-### CartItems
-- id, cartId, productId, quantity, price, timestamps
+### Cart
+- `GET /api/cart` - Get user cart
+- `POST /api/cart` - Add item to cart
+- `PUT /api/cart/:id` - Update cart item
+- `DELETE /api/cart/:id` - Remove cart item
+- `DELETE /api/cart` - Clear cart
 
 ### Orders
-- id, orderNumber, userId, totalAmount, status, shippingAddress, paymentMethod, paymentStatus, timestamps
+- `POST /api/orders` - Create order
+- `GET /api/orders` - Get user orders
+- `GET /api/orders/:id` - Get order by ID
+- `PUT /api/orders/:id/cancel` - Cancel order
 
-### OrderItems
-- id, orderId, productId, quantity, price, productName, timestamps
+## Tech Stack
 
-## Authentication
+### Backend
+- Node.js + TypeScript
+- Express.js
+- Sequelize (MySQL)
+- JWT Authentication
+- bcryptjs
+- express-validator
 
-API menggunakan JWT untuk authentication. Setelah login, user akan mendapat token yang harus disertakan di header:
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Chakra UI
+- React Router
+- Axios
+- React Icons
 
-```
-Authorization: Bearer <token>
-```
+## Development
 
-## Role-based Access
-
-- **Admin**: Dapat mengelola produk dan melihat semua pesanan
-- **User**: Dapat berbelanja dan melihat pesanan sendiri
-
-## Error Handling
-
-API mengembalikan response dalam format JSON:
-
-```json
-{
-  "success": true/false,
-  "message": "Pesan response",
-  "data": {}, // jika ada data
-  "errors": [] // jika ada error validasi
-}
-```
-
-## Status Codes
-
-- `200` - OK
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `403` - Forbidden
-- `404` - Not Found
-- `500` - Internal Server Error
-
-## Contoh Penggunaan
-
-### Register User
+### Backend
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "Password123",
-    "phone": "081234567890",
-    "address": "Jl. Contoh No. 123"
-  }'
+cd backend
+npm run dev          # Development with hot reload
+npm run build        # Build for production
+npm run typecheck    # Type checking
 ```
 
-### Login
+### Frontend
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "Password123"
-  }'
+cd frontend
+npm run dev          # Development server
+npm run build        # Build for production
+npm run preview      # Preview production build
 ```
 
-### Add Product (Admin)
-```bash
-curl -X POST http://localhost:3000/api/products \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <admin-token>" \
-  -d '{
-    "name": "Laptop Gaming",
-    "description": "Laptop gaming dengan spesifikasi tinggi",
-    "price": 15000000,
-    "stock": 10,
-    "category": "Electronics",
-    "image": "https://example.com/laptop.jpg"
-  }'
-```
+## License
 
-### Add to Cart
-```bash
-curl -X POST http://localhost:3000/api/cart/add \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <user-token>" \
-  -d '{
-    "productId": 1,
-    "quantity": 2
-  }'
-```
-
-### Checkout
-```bash
-curl -X POST http://localhost:3000/api/orders \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <user-token>" \
-  -d '{
-    "shippingAddress": "Jl. Pengiriman No. 456, Jakarta",
-    "paymentMethod": "COD"
-  }'
-```
+MIT
