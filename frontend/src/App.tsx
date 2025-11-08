@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContextProvider';
 import { useAuth } from './hooks/useAuth';
 import { CartProvider } from './contexts/CartContextProvider';
 import Navbar from './components/Navbar';
+import AdminRoute from './components/AdminRoute';
 import {
   Login,
   Register,
@@ -14,6 +15,7 @@ import {
   Orders,
   OrderDetail,
   Profile,
+  ProductManagement,
 } from './pages';
 
 // Protected Route component
@@ -104,6 +106,16 @@ function AppContent() {
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
+          }
+        />
+
+        {/* Admin routes */}
+        <Route
+          path="/admin/products"
+          element={
+            <AdminRoute>
+              <ProductManagement />
+            </AdminRoute>
           }
         />
 

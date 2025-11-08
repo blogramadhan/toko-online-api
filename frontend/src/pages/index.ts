@@ -7,3 +7,4 @@ export { default as Checkout } from './Checkout';
 export { default as Orders } from './Orders';
 export { default as OrderDetail } from './OrderDetail';
 export { default as Profile } from './Profile';
+export { default as ProductManagement } from './ProductManagement';

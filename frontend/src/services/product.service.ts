@@ -36,4 +36,18 @@ export const productService = {
     const response = await api.delete(`/products/${id}`);
     return response.data;
   },
+
+  // Admin-specific endpoints
+  getAdminProducts: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    category?: string;
+    isActive?: boolean;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<ApiResponse<{ products: Product[]; pagination: unknown }>> => {
+    const response = await api.get('/products/admin/all', { params });
+    return response.data;
+  },
 };

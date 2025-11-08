@@ -86,6 +86,17 @@ export default function Navbar() {
                 >
                   Orders
                 </Button>
+                {user.role === 'admin' && (
+                  <Button
+                    as={RouterLink}
+                    to="/admin/products"
+                    variant="ghost"
+                    size="sm"
+                    colorScheme="purple"
+                  >
+                    Admin
+                  </Button>
+                )}
                 <Menu>
                   <MenuButton
                     as={IconButton}
@@ -97,6 +108,11 @@ export default function Navbar() {
                     <MenuItem as={RouterLink} to="/profile">
                       Profile
                     </MenuItem>
+                    {user.role === 'admin' && (
+                      <MenuItem as={RouterLink} to="/admin/products">
+                        Product Management
+                      </MenuItem>
+                    )}
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
